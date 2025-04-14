@@ -12,6 +12,7 @@ class Bread(models.Model):
     def __str__(self):
         return self.name
 
+
 class Review(models.Model):
     bread = models.ForeignKey(Bread, on_delete=models.CASCADE, related_name='reviews')
     user_name = models.CharField(max_length=100)  # Имя пользователя

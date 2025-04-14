@@ -19,3 +19,4 @@ async def send_telegram_notification(orders):
             f"Адрес: {order.address}"
         )
         await bot.send_message(chat_id=chat_id, text=message)
+

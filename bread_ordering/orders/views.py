@@ -188,3 +188,4 @@ def about_us(request):
 def contact(request):
 
     return render(request, 'orders/contact.html')
+

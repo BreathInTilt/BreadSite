@@ -6,3 +6,4 @@ admin.site.register(Order)
 @admin.register(Bread)
 class BreadAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'stock')
+
