@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Bread</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        body {
+            font-family: Epilogue, "Noto Sans", sans-serif;
+        }
+        .card {
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+        }
+        .btn-custom {
+            background-color: #e66e19;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-custom:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="relative flex size-full min-h-screen flex-col bg-white">
+        <header class="flex items-center justify-between border-b border-[#f4f2f0] px-10 py-3">
+            <div class="flex items-center gap-4 text-[#181411]">
+                <div class="size-4">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="text-lg font-bold"><a href="{% url 'bread_list' %}">BreadSite</a></h2>
+            </div>
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-9">
+                    <a class="text-[#181411] text-sm font-medium" href="{% url 'about_us' %}">О нас</a>
+                    <a class="text-[#181411] text-sm font-medium" href="{% url 'contact' %}">Контакты</a>
+                    <a class="text-[#181411] text-sm font-medium" href="{% url 'bread_list' %}">Хлеб</a>
+
+                    <a href="{% url 'view_cart' %}">
+                        <button
+                          class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#f4f2f0] text-[#181411] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+                          <div class="text-[#181411]" data-icon="ShoppingCart" data-size="20px" data-weight="regular">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                              <path
+                                d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"
+                              ></path>
+                            </svg>
+                          </div>
+                        </button>
+                    </a>
+                </div>
+                <div class="flex gap-2">
+                    <button class="flex items-center justify-center rounded-xl h-10 bg-[#f4f2f0] text-[#181411] text-sm font-bold px-4">EN</button>
+                    <button class="flex items-center justify-center rounded-xl h-10 bg-[#f4f2f0] text-[#181411] text-sm font-bold px-4">RU</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="px-4 md:px-40 flex flex-1 justify-center py-5">
+            <div class="flex flex-col max-w-[960px] w-full">
+                <h1 class="text-[#181411] text-[32px] font-bold leading-tight mt-3 text-center">
+                    Available Bread
+                </h1>
+
+                {% if messages %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mt-4" role="alert">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+                    {% for bread in breads %}
+                        <div class="flex flex-col gap-3 pb-3 card">
+                            <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+                                 style="background-image: url('{% if bread.image %}{{ bread.image.url }}{% else %}https://via.placeholder.com/300x200{% endif %}');">
+                            </div>
+                            <div>
+                                <p class="text-[#181411] text-base font-medium leading-normal">{{ bread.name }}</p>
+                                <p class="text-[#887263] text-sm font-normal leading-normal">{{ bread.description }}</p>
+                                <p class="text-[#887263] text-sm font-normal leading-normal">
+                                    <strong>Price:</strong> ${{ bread.price }}
+                                </p>
+                                <p class="text-[#887263] text-sm font-normal leading-normal">
+                                    <strong>Available:</strong> {{ bread.stock }} pcs
+                                </p>
+
+                                <form method="post" action="{% url 'add_to_cart' bread.id %}" class="mt-2">
+                                    {% csrf_token %}
+                                    <div class="flex flex-col gap-2">
+                                        <input type="number" name="quantity"
+                                               class="form-input rounded-xl border-[#e5e0dc] text-sm px-2 py-1"
+                                               min="1" max="{{ bread.stock }}" value="1">
+                                        <div class="flex gap-2">
+                                            <a href="{% url 'bread_detail' bread.id %}"
+                                               class="flex-1 text-center rounded-xl h-10 bg-[#f4f2f0] text-[#181411] text-sm font-bold leading-normal flex items-center justify-center">
+                                                Подробнее
+                                            </a>
+                                            <button type="submit"
+                                                    class="flex-1 rounded-xl h-10 bg-[#e66e19] text-white text-sm font-bold leading-normal flex items-center justify-center btn-custom">
+                                                Добавить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

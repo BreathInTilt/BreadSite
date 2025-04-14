@@ -1,0 +1,147 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Epilogue%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>Galileo Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style='font-family: Epilogue, "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between border-b border-[#f4f2f0] px-10 py-3">
+          <div class="flex items-center gap-4 text-[#181411]">
+            <div class="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+              </svg>
+            </div>
+            <h2 class="text-lg font-bold"><a href="{% url 'bread_list' %}">BreadSite</a></h2>
+          </div>
+          <div class="flex items-center gap-8">
+            <div class="flex items-center gap-9">
+              <a class="text-[#181411] text-sm font-medium" href="{% url 'about_us' %}">О нас</a>
+              <a class="text-[#181411] text-sm font-medium" href="{% url 'contact' %}">Контакты</a>
+              <a class="text-[#181411] text-sm font-medium" href="{% url 'bread_list' %}">Хлеб</a>
+
+              <a href="{% url 'view_cart' %}">
+                <button
+                        class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#f4f2f0] text-[#181411] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+                  <div class="text-[#181411]" data-icon="ShoppingCart" data-size="20px" data-weight="regular">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                      <path
+                              d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"
+                      ></path>
+                    </svg>
+                  </div>
+                </button>
+              </a>
+            </div>
+            <div class="flex gap-2">
+              <button class="flex items-center justify-center rounded-xl h-10 bg-[#f4f2f0] text-[#181411] text-sm font-bold px-4">EN</button>
+              <button class="flex items-center justify-center rounded-xl h-10 bg-[#f4f2f0] text-[#181411] text-sm font-bold px-4">RU</button>
+            </div>
+          </div>
+        </header>
+        <div class="px-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="@container">
+              <div class="@[480px]:p-4">
+                <div
+                  class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
+                  style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.usegalileo.ai/sdxl10/12174f0b-1eff-459c-b4bc-29b5ae06d530.png");'
+                >
+                  <div class="flex flex-col gap-2 text-left">
+                    <h1
+                      class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]"
+                    >
+                      Hleb Planete
+                    </h1>
+                    <h2 class="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">Handmade bread, made with love</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+              <div class="flex flex-1 gap-3 rounded-lg border border-[#e5e0dc] bg-white p-4 flex-col">
+                <div
+                  class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
+                  style='background-image: url("https://cdn.usegalileo.ai/sdxl10/c91b007b-7514-49be-b060-7bbd5722dde8.png");'
+                ></div>
+                <div class="flex flex-col gap-1">
+                  <h2 class="text-[#181411] text-base font-bold leading-tight">Meet the Bakers</h2>
+                  <p class="text-[#887263] text-sm font-normal leading-normal">
+                    At Hleb Planete, we believe that the best bread is made by hand. That's why we do everything the old-fashioned way. We use only the finest ingredients, and we
+                    never rush the process. Our bread is made with love, and it shows in every bite.
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-1 gap-3 rounded-lg border border-[#e5e0dc] bg-white p-4 flex-col">
+                <div
+                  class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
+                  style='background-image: url("https://cdn.usegalileo.ai/sdxl10/320788fa-f52c-4d22-bfdb-8bac5e2553f9.png");'
+                ></div>
+                <div class="flex flex-col gap-1">
+                  <h2 class="text-[#181411] text-base font-bold leading-tight">Our Philosophy</h2>
+                  <p class="text-[#887263] text-sm font-normal leading-normal">
+                    We've been making bread for over 30 years, and we still get up at 3am every day to make sure our customers have the freshest, most delicious bread possible. We
+                    don't cut corners, and we never compromise on quality. That's the Hleb Planete difference.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
+                  style='background-image: url("https://cdn.usegalileo.ai/sdxl10/698bcf45-c0d2-4838-a04e-f579f56a25f6.png");'
+                ></div>
+                <div>
+                  <p class="text-[#181411] text-base font-medium leading-normal">Our Bakery</p>
+                  <p class="text-[#887263] text-sm font-normal leading-normal">
+                    Our bakery is located in the heart of the city, and it's where all the magic happens. Our bakers arrive before dawn to start the ovens, and they work tirelessly
+                    to create the perfect loaves of bread.
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
+                  style='background-image: url("https://cdn.usegalileo.ai/sdxl10/36ec4286-bbc1-4f48-be08-540171a8899a.png");'
+                ></div>
+                <div>
+                  <p class="text-[#181411] text-base font-medium leading-normal">Our Team</p>
+                  <p class="text-[#887263] text-sm font-normal leading-normal">
+                    Our team is a tight-knit group of passionate food lovers. We're like family, and we treat our customers the same way. We take pride in our work, and we're
+                    always striving to improve.
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 pb-3">
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
+                  style='background-image: url("https://cdn.usegalileo.ai/sdxl10/4cd99815-361d-4f3a-90d4-6f430e9ee5a5.png");'
+                ></div>
+                <div>
+                  <p class="text-[#181411] text-base font-medium leading-normal">The Breadmaking Process</p>
+                  <p class="text-[#887263] text-sm font-normal leading-normal">
+                    Breadmaking is an art, and we take it very seriously. We use traditional techniques and time-honored recipes to create bread that's rich in flavor and texture.
+                    It's a labor of love, but we wouldn't have it any other way.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

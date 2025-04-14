@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bread.name }}</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+      body {
+        font-family: Epilogue, "Noto Sans", sans-serif;
+      }
+
+      .taste-note {
+        border: 1px solid #e5e0dc;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .review-star {
+        color: #e66e19;
+      }
+
+      .review-star svg:hover {
+        transform: scale(1.2);
+        transition: transform 0.2s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-white">
+      <!-- Header -->
+      <header class="flex items-center justify-between border-b border-[#f4f2f0] px-10 py-3">
+        <div class="flex items-center gap-4 text-[#181411]">
+          <div class="size-4">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+            </svg>
+          </div>
+          <h2 class="text-lg font-bold">
+            <a href="{% url 'bread_list' %}">BreadSite</a>
+          </h2>
+        </div>
+        <div class="flex items-center gap-8">
+          <div class="flex items-center gap-9">
+            <a class="text-[#181411] text-sm font-medium" href="{% url 'about_us' %}">О нас</a>
+            <a class="text-[#181411] text-sm font-medium" href="{% url 'contact' %}">Контакты</a>
+            <a class="text-[#181411] text-sm font-medium" href="{% url 'bread_list' %}">Хлеб</a>
+            <a href="{% url 'view_cart' %}">
+              <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#f4f2f0] text-[#181411] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+                <div class="text-[#181411]" data-icon="ShoppingCart" data-size="20px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path>
+                  </svg>
+                </div>
+              </button>
+            </a>
+          </div>
+          <div class="flex gap-2">
+            <button class="flex items-center justify-center rounded-xl h-10 bg-[#f4f2f0] text-[#181411] text-sm font-bold px-4">EN</button>
+            <button class="flex items-center justify-center rounded-xl h-10 bg-[#f4f2f0] text-[#181411] text-sm font-bold px-4">RU</button>
+          </div>
+        </div>
+      </header>
+      <!-- Main Content -->
+      <div class="px-4 md:px-40 flex flex-1 justify-center py-5">
+        <div class="flex flex-col max-w-[960px] w-full">
+          <!-- Breadcrumb -->
+          <div class="flex items-center gap-2 text-sm text-[#887263] mb-4">
+            <a href="{% url 'bread_list' %}">Home</a>
+            <span>/</span>
+            <span>Bread</span>
+          </div>
+          <!-- Product Image and Title -->
+          <div class="relative mb-6">
+            <div class="w-full bg-center bg-no-repeat bg-cover rounded-xl min-h-[400px]" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url('{% if bread.image %}{{ bread.image.url }}{% else %}https://via.placeholder.com/960x400{% endif %}');">
+              <div class="absolute bottom-0 left-0 p-6 text-white">
+                <h1 class="text-4xl font-black leading-tight tracking-[-0.033em]">{{ bread.name }}</h1>
+                <p class="text-base font-normal leading-normal mt-2">{{ bread.description }}</p>
+                <form method="post" action="{% url 'add_to_cart' bread.id %}" class="mt-4"> {% csrf_token %} <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="rounded-xl h-10 bg-[#e66e19] text-white text-sm font-bold leading-normal px-4"> Add to Cart </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- Details Section -->
+          <div class="flex flex-col gap-6">
+            <div>
+              <h3 class="text-[#181411] text-xl font-bold leading-tight">Details</h3>
+              <p class="text-[#181411] text-base font-normal leading-normal mt-2"> Ingredients: {{ bread.ingredients }}. Net weight: 24 oz (680 g). Serving size: 3 oz (85 g) / 8 servings per container. </p>
+            </div>
+            <!-- Taste Notes -->
+            <div>
+              <h3 class="text-[#181411] text-xl font-bold leading-tight">Taste Notes</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                <div class="taste-note">
+                  <p class="text-[#181411] text-sm font-medium">Tangy</p>
+                  <p class="text-[#887263] text-xs">Citrusy, acidic</p>
+                </div>
+                <div class="taste-note">
+                  <p class="text-[#181411] text-sm font-medium">Earthy</p>
+                  <p class="text-[#887263] text-xs">Mineral, natural</p>
+                </div>
+                <div class="taste-note">
+                  <p class="text-[#181411] text-sm font-medium">Chewy</p>
+                  <p class="text-[#887263] text-xs">Substantial, dense</p>
+                </div>
+                <div class="taste-note">
+                  <p class="text-[#181411] text-sm font-medium">Creamy</p>
+                  <p class="text-[#887263] text-xs">Smooth, fatty</p>
+                </div>
+                <div class="taste-note">
+                  <p class="text-[#181411] text-sm font-medium">Rich</p>
+                  <p class="text-[#887263] text-xs">Indulgent, full</p>
+                </div>
+                <div class="taste-note">
+                  <p class="text-[#181411] text-sm font-medium">Savory</p>
+                  <p class="text-[#887263] text-xs">Flavorful, robust</p>
+                </div>
+                <div class="taste-note">
+                  <p class="text-[#181411] text-sm font-medium">Balanced</p>
+                  <p class="text-[#887263] text-xs">Harmonious, well-rounded</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6">
+              <h3 class="text-[#181411] text-xl font-bold leading-tight">Оставить отзыв</h3> {% if messages %} <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mt-4" role="alert"> {% for message in messages %} <p>{{ message }}</p> {% endfor %} </div> {% endif %} <form method="post" class="mt-4"> {% csrf_token %} <div class="flex flex-col gap-4">
+                  <div>
+                    {{ review_form.user_name.label_tag }}
+                    {{ review_form.user_name }}
+                  </div>
+                  <div>
+                    {{ review_form.rating.label_tag }}
+                    {{ review_form.rating }}
+                  </div>
+                  <div>
+                    {{ review_form.comment.label_tag }}
+                    {{ review_form.comment }}
+                  </div>
+                  <button type="submit" class="rounded-xl h-10 bg-[#e66e19] text-white text-sm font-bold leading-normal px-4 w-32"> Отправить </button>
+                </div>
+              </form>
+            </div>
+            <!-- Reviews Section -->
+            <!-- Замените секцию "Reviews" на эту -->
+            <!-- Обновленная секция "Reviews" -->
+            <!-- Обновленная секция "Reviews" -->
+            <div>
+              <h3 class="text-[#181411] text-xl font-bold leading-tight">Reviews</h3> {% if reviews %} <div class="flex items-center gap-2 mt-2">
+                <span class="text-[#181411] text-2xl font-bold">{{ average_rating }}</span>
+                <span class="flex gap-1 review-star"> {% for i in "12345" %} {% with star_position=forloop.counter %} {% if star_position <= average_rating %}
+                  <!-- Полная звезда -->
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                  </svg> {% elif star_position <= average_rating|add:1 %}
+                  <!-- Частично заполненная звезда --> {% with fraction=average_rating|add:0|floatformat:2|cut:"."|slice:"1:" %} {% if fraction %} {% with fill_percentage=fraction|add:"0" %} <svg width="20" height="20" viewBox="0 0 24 24">
+                    <defs>
+                      <linearGradient id="starGradient{{ star_position }}">
+                        <stop offset="{{ fill_percentage }}%" stop-color="#e66e19" />
+                        <stop offset="{{ fill_percentage }}%" stop-color="#d3d3d3" />
+                      </linearGradient>
+                    </defs>
+                    <path fill="url(#starGradient{{ star_position }})" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                  </svg> {% endwith %} {% endif %} {% endwith %} {% else %}
+                  <!-- Пустая звезда -->
+                  <svg width="20" height="20" fill="#d3d3d3" viewBox="0 0 24 24">
+                    <path d="M12 15.39l-3.66 2.2.7-4.05-2.97-2.9 4.1-.6L12 6l1.83 3.94 4.1.6-2.97 2.9.7 4.05z" />
+                  </svg> {% endif %} {% endwith %} {% endfor %}
+                </span>
+                <span class="text-[#887263] text-sm">({{ reviews|length }} отзывов)</span>
+              </div>
+              <!-- Текстовое описание рейтинга -->
+              <span class="text-[#887263] text-sm"> {% if average_rating >= 4.5 %}Отлично {% elif average_rating >= 3.5 %}Хорошо {% elif average_rating >= 2.5 %}Средне {% elif average_rating >= 1.5 %}Плохо {% else %}Очень плохо{% endif %} </span>
+              <div class="mt-6 space-y-6"> {% for review in reviews %} <div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div>
+                      <p class="text-[#181411] text-sm font-medium">{{ review.user_name }}</p>
+                      <p class="text-[#887263] text-xs">{{ review.created_at|date:"F d, Y" }}</p>
+                    </div>
+                  </div>
+                  <div class="flex gap-1 review-star mt-1"> {% for i in "12345" %} {% if forloop.counter <= review.rating %}
+                    <!-- Полная звезда -->
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg> {% else %}
+                    <!-- Пустая звезда -->
+                    <svg width="16" height="16" fill="#d3d3d3" viewBox="0 0 24 24">
+                      <path d="M12 15.39l-3.66 2.2.7-4.05-2.97-2.9 4.1-.6L12 6l1.83 3.94 4.1.6-2.97 2.9.7 4.05z" />
+                    </svg> {% endif %} {% endfor %}
+                  </div>
+                  <p class="text-[#181411] text-sm mt-2">{{ review.comment }}</p>
+                </div> {% endfor %} </div> {% else %} <p class="text-[#887263] text-sm mt-2">Отзывов пока нет. Будьте первым!</p> {% endif %}
+            </div>
+            <!-- Back to Bread Link -->
+            <a href="{% url 'bread_list' %}" class="text-[#181411] text-sm font-medium mt-6">Back to Bread</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
