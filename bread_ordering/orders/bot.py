@@ -1,12 +1,10 @@
 import telegram
 import asyncio
-
-#'1195159042:AAGQgmkFczEb_nPpYRiPHdpdIDbk2SVhaF4'
-#'712395220'
+import os
 
 
 async def send_telegram_notification(orders):
-    bot_token = '1195159042:AAGQgmkFczEb_nPpYRiPHdpdIDbk2SVhaF4'
+    bot_token = os.getenv("telegram")
     chat_id = '712395220'  # Ваш Telegram Chat ID
     bot = telegram.Bot(token=bot_token)
     for order in orders:
