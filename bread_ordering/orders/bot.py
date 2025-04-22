@@ -1,7 +1,8 @@
 import telegram
 import asyncio
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 
 async def send_telegram_notification(orders):
     bot_token = os.getenv("telegram")

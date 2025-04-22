@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +27,13 @@ SECRET_KEY = 'django-insecure-fsaah*@gblr7k02r_yz13s96irgi=+_3%z$5$u-e3i^6w@1!bx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+    '127.0.0.1',
+    'localhost',
+    '*.ngrok-free.app',
+    '5c42-178-221-172-98.ngrok-free.app',
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -44,6 +50,8 @@ INSTALLED_APPS = [
     'orders',
     "crispy_forms",
     "crispy_bootstrap4",  # Добавьте для использования стилей Bootstrap 5
+    'users',
+    'django_telegram_login',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -123,7 +131,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+# Если используете django-csp или другой способ настройки CSP
+CSP_SCRIPT_SRC = ["'self'", "https://telegram.org"]
+CSP_FRAME_SRC = ["'self'", "https://oauth.telegram.org"]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -133,3 +143,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+load_dotenv()
+TELEGRAM_BOT_NAME = 'SuperDuperIdiotbot'  # Имя вашего бота (без @)
+TELEGRAM_BOT_TOKEN = "6644274888:AAGfoBqOeGlrqqq25OgHrGYRZlK6O_HCBGM" #os.getenv("tg_auth")  # Токен от @BotFather
+TELEGRAM_LOGIN_REDIRECT_URL = " https://5c42-178-221-172-98.ngrok-free.app/telegram/callback/"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
