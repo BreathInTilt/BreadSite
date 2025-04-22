@@ -145,6 +145,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 load_dotenv()
 TELEGRAM_BOT_NAME = 'SuperDuperIdiotbot'  # Имя вашего бота (без @)
-TELEGRAM_BOT_TOKEN = "6644274888:AAGfoBqOeGlrqqq25OgHrGYRZlK6O_HCBGM" #os.getenv("tg_auth")  # Токен от @BotFather
+TELEGRAM_BOT_TOKEN = os.getenv("tg_auth")  # Токен от @BotFather
 TELEGRAM_LOGIN_REDIRECT_URL = " https://5c42-178-221-172-98.ngrok-free.app/telegram/callback/"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
