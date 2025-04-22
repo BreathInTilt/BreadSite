@@ -22,5 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('orders.urls')),
     path('', include('users.urls')),
+    path('accounts/', include('allauth.urls')),
     path('telegram/callback/', telegram_callback, name='telegram_callback'),  # Добавляем этот маршрут
+
 ]

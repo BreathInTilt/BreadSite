@@ -52,7 +52,16 @@ INSTALLED_APPS = [
     "crispy_bootstrap4",  # Добавьте для использования стилей Bootstrap 5
     'users',
     'django_telegram_login',
+    'allauth',  # Добавляем django-allauth
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # Провайдер Google
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://5c42-178-221-172-98.ngrok-free.app',  # Добавьте ваш ngrok-домен
+]
+
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
@@ -66,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'bread_ordering.urls'
@@ -136,7 +146,10 @@ CSP_SCRIPT_SRC = ["'self'", "https://telegram.org"]
 CSP_FRAME_SRC = ["'self'", "https://oauth.telegram.org"]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',  # Добавляем бэкенд allauth
+]
 STATIC_URL = 'static/'
 
 # Default primary key field type
@@ -148,3 +161,27 @@ TELEGRAM_BOT_NAME = 'SuperDuperIdiotbot'  # Имя вашего бота (без
 TELEGRAM_BOT_TOKEN = os.getenv("tg_auth")  # Токен от @BotFather
 TELEGRAM_LOGIN_REDIRECT_URL = " https://5c42-178-221-172-98.ngrok-free.app/telegram/callback/"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
+
+
+SITE_ID = 1  # Требуется для django-allauth
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': os.getenv("client_id"),  # Вставьте Client ID
+            'secret': os.getenv("client_secret"),  # Вставьте Client Secret
+        }
+    }
+}
+
+# Перенаправление после логина
+LOGIN_REDIRECT_URL = '/'  # Перенаправление на главную страницу после входа
+LOGOUT_REDIRECT_URL = '/'  # Перенаправление после выхода
