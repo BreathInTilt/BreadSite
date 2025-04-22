@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to BreadSite</title>
+    <!-- Подключаем Tailwind CSS через CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #f5e8c7, #f8d9a0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a3c31;
+            margin-bottom: 1.5rem;
+        }
+        .telegram-button, .google-button, .viber-button {
+            margin-top: 1rem;
+        }
+        .google-button a, .viber-button a {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .google-button a {
+            background-color: #4285F4;
+        }
+        .google-button a:hover {
+            background-color: #3267D6;
+        }
+        .viber-button a {
+            background-color: #665CAC;
+        }
+        .viber-button a:hover {
+            background-color: #554B9A;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login to BreadSite</h1>
+        <p class="text-gray-600 mb-4">Sign in using one of the options below</p>
+        <div class="telegram-button">
+            <script async src="https://telegram.org/js/telegram-widget.js?21"
+                    data-telegram-login="{{ TELEGRAM_BOT_NAME }}"
+                    data-size="large"
+                    data-auth-url="{{ TELEGRAM_LOGIN_REDIRECT_URL }}"
+                    data-request-access="write"></script>
+        </div>
+        <div class="google-button">
+            <a href="/accounts/google/login/">Sign in with Google</a>
+        </div>
+        <div class="viber-button">
+            <a href="viber://pa?chatURI=<your-bot-public-account-uri>&context=login">Sign in with Viber</a>
+        </div>
+    </div>
+</body>
+</html>

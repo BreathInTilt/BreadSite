@@ -1,0 +1,7 @@
+.git
+.idea
+.env
+roots.sst
+telegram.env
+tg_auth.env
+.venv
