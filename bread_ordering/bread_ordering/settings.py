@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '*.ngrok-free.app',
-    '5c42-178-221-172-98.ngrok-free.app',
+    'proper-formally-rodent.ngrok-free.app',
 ]
 
 MEDIA_URL = '/media/'
@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://5c42-178-221-172-98.ngrok-free.app',  # Добавьте ваш ngrok-домен
+    'https://proper-formally-rodent.ngrok-free.app',  # Добавьте ваш ngrok-домен
 ]
 
 
@@ -159,7 +159,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 load_dotenv()
 TELEGRAM_BOT_NAME = 'SuperDuperIdiotbot'  # Имя вашего бота (без @)
 TELEGRAM_BOT_TOKEN = os.getenv("tg_auth")  # Токен от @BotFather
-TELEGRAM_LOGIN_REDIRECT_URL = " https://5c42-178-221-172-98.ngrok-free.app/telegram/callback/"
+TELEGRAM_LOGIN_REDIRECT_URL = "https://proper-formally-rodent.ngrok-free.app/telegram/callback/"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 
