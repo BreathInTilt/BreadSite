@@ -29,10 +29,10 @@
             color: #4a3c31;
             margin-bottom: 1.5rem;
         }
-        .telegram-button, .google-button, .viber-button {
+        .telegram-button, .google-button, .email-login {
             margin-top: 1rem;
         }
-        .google-button a, .viber-button a {
+        .google-button a, .email-login a {
             display: inline-block;
             padding: 0.75rem 1.5rem;
             color: white;
@@ -47,15 +47,16 @@
         .google-button a:hover {
             background-color: #3267D6;
         }
-        .viber-button a {
-            background-color: #665CAC;
+        .email-login a {
+            background-color: #f5a623;
         }
-        .viber-button a:hover {
-            background-color: #554B9A;
+        .email-login a:hover {
+            background-color: #e69520;
         }
     </style>
 </head>
 <body>
+
     <div class="login-container">
         <h1>Login to BreadSite</h1>
         <p class="text-gray-600 mb-4">Sign in using one of the options below</p>
@@ -67,8 +68,15 @@
                     data-request-access="write"></script>
         </div>
         <div class="google-button">
-            <a href="/accounts/google/login/">Sign in with Google</a>
+            <a href="{% url 'social:begin' 'google-oauth2' %}">Sign in with Google</a>
         </div>
+        <div class="email-login">
+            <a href="{% url 'account_login' %}">Sign in with Email</a>
+        </div>
+        <p class="mt-4 text-center">
+        Don't have an account? <a href="{% url 'account_signup' %}" class="text-yellow-500 hover:underline">Sign Up</a>
+        </p>
     </div>
+
 </body>
 </html>

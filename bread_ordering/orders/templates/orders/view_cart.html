@@ -1,51 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center">Ваш заказ</h1>
+{% extends "orders/base.html" %}
+
+{% block title %}
+Your Cart - BreadSite
+{% endblock %}
+
+{% block content %}
+<div class="px-4 md:px-40 flex flex-1 justify-center py-5">
+    <div class="flex flex-col max-w-[960px] w-full">
+        <h1 class="text-[#181411] text-[32px] font-bold leading-tight mt-3 text-center">
+            Your Cart
+        </h1>
+
+        {% if messages %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mt-4" role="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         {% if cart %}
-            <form method="post" action="{% url 'confirm_order' %}">
-                {% csrf_token %}
-                <table class="table mt-4">
-                    <thead>
-                        <tr>
-                            <th>Товар</th>
-                            <th>Количество</th>
-                            <th>Цена</th>
-                            <th>Сумма</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for bread_id, item in cart.items %}
-                            <tr>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>${{ item.price }}</td>
-                                <td>${{ item.price|floatformat:2|add:item.quantity|floatformat:2 }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success">Оформить заказ</button>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="grid grid-cols-1 gap-4">
+                    {% for item in cart %}
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <div class="flex items-center">
+                                <img src="{{ item.image }}" alt="{{ item.name }}" class="w-16 h-16 object-cover rounded-lg mr-4">
+                                <div>
+                                    <h2 class="text-lg font-semibold text-[#181411]">{{ item.name }}</h2>
+                                    <p class="text-[#887263] text-sm">${{ item.price|floatformat:2 }} x {{ item.quantity }}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-semibold text-[#181411]">${{ item.total_price|floatformat:2 }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            </form>
+                <div class="mt-6">
+                    <h2 class="text-xl font-bold text-[#181411]">Total: ${{ total|floatformat:2 }}</h2>
+                    <form method="post" action="{% url 'confirm_order' %}" class="mt-4">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="customer_name" class="block text-[#181411] text-sm font-medium">Your Name</label>
+                            <input type="text" id="customer_name" name="customer_name" class="form-input w-full rounded-xl border-[#e5e0dc] text-sm px-2 py-1" value="{% if user.is_authenticated %}{{ user.first_name }} {{ user.last_name }}{% endif %}" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="phone" class="block text-[#181411] text-sm font-medium">Phone Number</label>
+                            <input type="text" id="phone" name="phone" class="form-input w-full rounded-xl border-[#e5e0dc] text-sm px-2 py-1" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="address" class="block text-[#181411] text-sm font-medium">Delivery Address</label>
+                            <textarea id="address" name="address" class="form-textarea w-full rounded-xl border-[#e5e0dc] text-sm px-2 py-1" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full rounded-xl h-10 bg-[#e66e19] text-white text-sm font-bold leading-normal flex items-center justify-center btn-custom">
+                            Checkout
+                        </button>
+                    </form>
+                </div>
+            </div>
         {% else %}
-            <p class="text-center">Корзина пуста. <a href="{% url 'bread_list' %}">Перейти к хлебу</a></p>
+            <p class="text-[#887263] text-center">Your cart is empty.</p>
+            <div class="text-center mt-4">
+                <a href="{% url 'bread_list' %}" class="inline-block rounded-xl h-10 bg-[#e66e19] text-white text-sm font-bold leading-normal px-4 flex items-center justify-center btn-custom">
+                    Continue Shopping
+                </a>
+            </div>
         {% endif %}
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
-
+</div>
+{% endblock %}

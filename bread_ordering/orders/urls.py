@@ -15,6 +15,8 @@ urlpatterns = [
     path('order_success/', views.order_success, name='order_success'),
     path('about_us/', views.about_us, name='about_us'),
     path('contact/', views.contact, name='contact'),
+    path('orders/', views.user_orders, name='user_orders'),
+    path('profile/edit/', views.profile_edit, name='profile_edit'),  # Новый маршрут
 ]
 
 if settings.DEBUG:

@@ -1,16 +1,45 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from django.shortcuts import render, redirect, get_object_or_404
 from .bot import send_telegram_notification
-from .models import Bread, Order
+from .models import Bread, Order, UserProfile
 from .forms import OrderForm, ReviewForm
 import telegram
 import asyncio
 from decimal import Decimal
+from django import forms
+from django.contrib.auth.models import User
 
-#'1195159042:AAGQgmkFczEb_nPpYRiPHdpdIDbk2SVhaF4'
-#'712395220'
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar', 'bio']
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+@login_required
+def profile_edit(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('user_orders')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=request.user.profile)
+
+    return render(request, 'orders/profile_edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    })
 
 def bread_list(request):
     breads = Bread.objects.all()
@@ -51,84 +80,86 @@ def create_order(request, bread_id):
 
 
 def bread_detail(request, bread_id):
-    bread = get_object_or_404(Bread, pk=bread_id)
+    bread = get_object_or_404(Bread, id=bread_id)
+    reviews = bread.reviews.all()
 
     if request.method == 'POST':
-        review_form = ReviewForm(request.POST)
-        if review_form.is_valid():
-            review = review_form.save(commit=False)
+        if not request.user.is_authenticated:
+            return redirect('account_login')  # Перенаправляем на страницу логина
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
             review.bread = bread
             review.save()
-            messages.success(request, "Ваш отзыв успешно добавлен!")
-            return redirect('bread_detail', bread_id=bread_id)
+            return redirect('bread_detail', bread_id=bread.id)
     else:
-        review_form = ReviewForm()
+        form = ReviewForm()
 
-    reviews = bread.reviews.all()  # Получаем все отзывы для данного хлеба
-    average_rating = reviews.aggregate(Avg('rating'))['rating__avg']  # Средний рейтинг
-    if average_rating is not None:
-        average_rating = round(average_rating, 1)  # Округляем до 1 знака после запятой
-    else:
-        average_rating = 0  # Если отзывов нет, средний рейтинг = 0
-
-    return render(request, 'orders/bread_detail.html', {
+    return render(request, 'bread_ordering/bread_detail.html', {
         'bread': bread,
         'reviews': reviews,
-        'review_form': review_form,
-        'average_rating': average_rating
+        'form': form,
     })
 
 
+
+def user_orders(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    # Создаём список заказов с вычисленной стоимостью
+    orders_with_total = []
+    total_orders = orders.count()
+    total_spent = 0
+    for order in orders:
+        order_total = order.bread.price * order.quantity  # Вычисляем стоимость заказа
+        orders_with_total.append({
+            'order': order,
+            'total_price': order_total,
+        })
+        total_spent += order_total
+
+    return render(request, 'orders/user_orders.html', {
+        'orders': orders_with_total,
+        'user': request.user,
+        'total_orders': total_orders,
+        'total_spent': total_spent,
+    })
+
 def confirm_order(request):
     cart = request.session.get('cart', {})
-
-    # Проверяем, пуста ли корзина
     if not cart:
-        messages.error(request, "Корзина пуста.")
+        messages.error(request, "Your cart is empty.")
         return redirect('view_cart')
 
     if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            orders = []
-            # Перебираем все товары в корзине и создаем заказы
-            for bread_id, item in cart.items():
-                bread = get_object_or_404(Bread, pk=bread_id)
-                quantity = item['quantity']
+        customer_name = request.POST.get('customer_name')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
 
-                # Проверка наличия достаточного количества на складе
-                if bread.stock >= quantity:
-                    bread.stock -= quantity
-                    bread.save()
+        if not all([customer_name, phone, address]):
+            messages.error(request, "Please fill in all required fields.")
+            return redirect('view_cart')
 
-                    # Создание записи заказа
-                    order = Order.objects.create(
-                        bread=bread,
-                        customer_name=form.cleaned_data['customer_name'],
-                        phone=form.cleaned_data['phone'],
-                        address=form.cleaned_data['address'],
-                        quantity=quantity
-                    )
-                    orders.append(order)
+        for bread_id, item in cart.items():
+            bread = Bread.objects.get(id=bread_id)
+            order = Order.objects.create(
+                bread=bread,
+                quantity=item['quantity'],
+                customer_name=customer_name,
+                phone=phone,
+                address=address,
+                user=request.user if request.user.is_authenticated else None  # Сохраняем пользователя, если он авторизован
+            )
 
+        # Очищаем корзину
+        request.session['cart'] = {}
+        messages.success(request, "Order placed successfully!")
+        return redirect('order_success')
 
-                else:
-                    # Если недостаточно товара, отправляем сообщение об ошибке и перенаправляем назад в корзину
-                    messages.error(request, f"Недостаточно товара для {item['name']}.")
-                    return redirect('view_cart')
-
-            # Очистка корзины после успешного оформления
-            asyncio.run(send_telegram_notification(orders))
-            request.session['cart'] = {}
-            messages.success(request, "Ваш заказ был успешно оформлен.")
-            return redirect('order_success')
-        else:
-            messages.error(request, "Пожалуйста, заполните все поля корректно.")
-    else:
-        # Создаем начальные данные для формы, если это GET запрос
-        form = OrderForm()
-
-    return render(request, 'orders/create_order.html', {'form': form, 'cart': cart})
+    return redirect('view_cart')
 
 
 
@@ -168,18 +199,23 @@ def add_to_cart(request, bread_id):
 
 def view_cart(request):
     cart = request.session.get('cart', {})
+    cart_items = []
 
-    # Проверяем, пуста ли корзина
-    if not cart:
-        messages.error(request, "Корзина пуста.")
-        return redirect('bread_list')
+    # Вычисляем элементы корзины и их стоимость
+    total = 0
+    for bread_id, item in cart.items():
+        item['total_price'] = item['price'] * item['quantity']  # Добавляем поле с общей стоимостью элемента
+        cart_items.append(item)
+        total += item['total_price']
 
-    return render(request, 'orders/view_cart.html', {'cart': cart})
+    return render(request, 'orders/view_cart.html', {
+        'cart': cart_items,
+        'total': total,
+    })
 
 
 def order_success(request):
-
-    return render(request, 'orders/order_success.html')
+    return render(request, 'orders/order_success.html', {})
 
 def about_us(request):
 

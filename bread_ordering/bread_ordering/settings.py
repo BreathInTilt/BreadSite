@@ -185,3 +185,17 @@ SOCIALACCOUNT_PROVIDERS = {
 # Перенаправление после логина
 LOGIN_REDIRECT_URL = '/'  # Перенаправление на главную страницу после входа
 LOGOUT_REDIRECT_URL = '/'  # Перенаправление после выхода
+
+# Настройки для django-allauth
+ACCOUNT_LOGIN_METHODS = {'email'}  # Замена для ACCOUNT_AUTHENTICATION_METHOD
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # Замена для ACCOUNT_EMAIL_REQUIRED, ACCOUNT_USERNAME_REQUIRED, ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Эта настройка осталась без изменений
+
+# Настройки отправки email через GreenMail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 3025
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = 'test@breadsite.local'
+EMAIL_HOST_PASSWORD = 'test'
+DEFAULT_FROM_EMAIL = 'no-reply@breadsite.local'
