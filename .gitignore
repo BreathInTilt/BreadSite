@@ -1,0 +1,4 @@
+.venv
+.idea
+roots.sst
+.envgit add .gitignore
