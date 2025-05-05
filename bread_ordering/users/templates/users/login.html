@@ -1,82 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login to BreadSite</title>
-    <!-- Подключаем Tailwind CSS через CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background: linear-gradient(to right, #f5e8c7, #f8d9a0);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .login-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-        h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #4a3c31;
-            margin-bottom: 1.5rem;
-        }
-        .telegram-button, .google-button, .email-login {
-            margin-top: 1rem;
-        }
-        .google-button a, .email-login a {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background-color 0.3s;
-        }
-        .google-button a {
-            background-color: #4285F4;
-        }
-        .google-button a:hover {
-            background-color: #3267D6;
-        }
-        .email-login a {
-            background-color: #f5a623;
-        }
-        .email-login a:hover {
-            background-color: #e69520;
-        }
-    </style>
-</head>
-<body>
+{% extends "orders/base.html" %}
+{% load socialaccount %}
+{% block title %}
+Login - BreadSite
+{% endblock %}
 
-    <div class="login-container">
-        <h1>Login to BreadSite</h1>
-        <p class="text-gray-600 mb-4">Sign in using one of the options below</p>
-        <div class="telegram-button">
-            <script async src="https://telegram.org/js/telegram-widget.js?21"
-                    data-telegram-login="{{ TELEGRAM_BOT_NAME }}"
-                    data-size="large"
-                    data-auth-url="{{ TELEGRAM_LOGIN_REDIRECT_URL }}"
-                    data-request-access="write"></script>
+{% block content %}
+<div class="px-4 md:px-40 flex flex-1 justify-center py-5">
+    <div class="flex flex-col max-w-[960px] w-full">
+        <h1 class="text-[#181411] text-[32px] font-bold leading-tight mt-3 text-center">
+            Login
+        </h1>
+
+        {% if messages %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mt-4" role="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="bg-white p-6 rounded-xl shadow-lg mt-6">
+            <form method="post" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="w-full rounded-xl h-10 bg-[#e66e19] text-white text-sm font-bold leading-normal flex items-center justify-center btn-custom mt-4">
+                    Login
+                </button>
+            </form>
+
+            <div class="mt-4 text-center">
+                <p class="text-[#887263]">Or sign in with:</p>
+                <a href="{% provider_login_url 'google' process='login' %}"
+                class="inline-block mt-2 rounded-xl h-10 bg-[#4285F4] text-white text-sm
+                font-bold leading-normal px-4 flex items-center justify-center btn-custom">
+                    Sign in with Google
+                </a>
+                <a href="{% url 'telegram_login' %}" class="inline-block mt-2 rounded-xl h-10 bg-[#0088cc] text-white text-sm font-bold leading-normal px-4 flex items-center justify-center btn-custom">
+                    Sign in with Telegram
+                </a>
+            </div>
+
+            <p class="text-[#887263] mt-4 text-center">
+                Don't have an account? <a href="{% url 'account_signup' %}" class="text-[#e66e19] hover:underline">Sign Up</a>
+            </p>
         </div>
-        <div class="google-button">
-            <a href="{% url 'social:begin' 'google-oauth2' %}">Sign in with Google</a>
-        </div>
-        <div class="email-login">
-            <a href="{% url 'account_login' %}">Sign in with Email</a>
-        </div>
-        <p class="mt-4 text-center">
-        Don't have an account? <a href="{% url 'account_signup' %}" class="text-yellow-500 hover:underline">Sign Up</a>
-        </p>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

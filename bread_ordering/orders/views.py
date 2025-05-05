@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
@@ -96,7 +97,7 @@ def bread_detail(request, bread_id):
     else:
         form = ReviewForm()
 
-    return render(request, 'bread_ordering/bread_detail.html', {
+    return render(request, 'orders/bread_detail.html', {
         'bread': bread,
         'reviews': reviews,
         'form': form,
@@ -142,7 +143,6 @@ def confirm_order(request):
         if not all([customer_name, phone, address]):
             messages.error(request, "Please fill in all required fields.")
             return redirect('view_cart')
-
         for bread_id, item in cart.items():
             bread = Bread.objects.get(id=bread_id)
             order = Order.objects.create(
@@ -153,10 +153,12 @@ def confirm_order(request):
                 address=address,
                 user=request.user if request.user.is_authenticated else None  # Сохраняем пользователя, если он авторизован
             )
+            asyncio.run(send_telegram_notification(order))
 
         # Очищаем корзину
         request.session['cart'] = {}
         messages.success(request, "Order placed successfully!")
+
         return redirect('order_success')
 
     return redirect('view_cart')
